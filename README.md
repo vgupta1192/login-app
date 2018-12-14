@@ -6,7 +6,7 @@ You may want to have a look at the demo https://vgupta1192.github.io/login-app/
 
 ## Adding the component in your project
 ```
-<app-root</app-root>
+<app-login-root></app-login-root>
 ```
 ### Dependencies
 ```
