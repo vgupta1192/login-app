@@ -12,8 +12,9 @@ You may want to have a look at the demo https://vgupta1192.github.io/login-app/
 ```
 npm install jquery --save
 npm install bootstrap --save
-
+```
 ### Login Credentials
 ```
 User Name: admin
 Password : admin123
+```
