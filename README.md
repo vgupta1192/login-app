@@ -102,7 +102,7 @@ export class LoginComponent implements OnInit {
 }
 ```
 ### login.component.html
-``` typescript
+``` html
 <div class="container">
     <div class="col-md-6 col-md-offset-3 loginDialog">
         <p class="lead">Login Form</p>
@@ -131,6 +131,83 @@ export class LoginComponent implements OnInit {
             <button class="btn btn-primary btn-lg resetMargin" type="submit" (click)="reset()">Reset</button>
           </div>
       </form>
+    </div>
+</div>
+```
+### auth.guard.ts
+``` typescript
+import { Injectable } from '@angular/core';
+import { CanActivate, CanActivateChild, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+
+
+    constructor(private router: Router) { }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        const url: string = state.url;
+        return this.verifyLogin(url);
+    }
+
+    verifyLogin(url): boolean {
+        if (!this.isLoggedIn()) {
+            this.router.navigate(['/login']);
+            return false;
+        } else if (this.isLoggedIn()) {
+            return true;
+        }
+    }
+    public isLoggedIn(): boolean {
+        let status = false;
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            status = true;
+        } else {
+            status = false;
+        }
+        return status;
+    }
+}
+```
+### login.ts
+``` typescript
+export class Login {
+    userid: string;
+    password: string;
+}
+```
+### dashboard.component.ts
+``` typescript
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent implements OnInit {
+
+  id: string;
+  constructor(private router: Router, public authService: AuthService) { }
+
+  ngOnInit() {
+    this.id = localStorage.getItem('token');
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+}
+```
+### dashboard.component.html
+``` html
+<div class="container">
+    <div class="col-md-6 col-md-offset-3 loginDialog">
+        Welcome,  {{id}}
+        <a href="javascript:void(0);" (click)="logout()">Logout</a>
     </div>
 </div>
 ```
